@@ -34,5 +34,16 @@ module.exports = {
     },
     inflation(dollars, year, onResponse) {
         makeApiCall(`/inflation/${year}/${dollars}`, onResponse);
+    },
+    paycheck: {
+        balance(onResponse) {
+            makeApiCall('/paycheck', onResponse);
+        },
+        pay(amount, onResponse) {
+            makeApiCall(`/paycheck/pay/${amount}`, onResponse);
+        },
+        reset(amount, onResponse) {
+            makeApiCall(`/paycheck/reset/${amount}`, onResponse);
+        }
     }
 };
