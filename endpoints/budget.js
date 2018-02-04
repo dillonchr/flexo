@@ -13,6 +13,6 @@ module.exports = (text, from, respondWith) => {
     if (amount && description) {
         budget.bought(from, {price:amount,description}, balanceResponse);
     } else {
-        budget.balance(balanceResponse);
+        budget.balance(from, balanceResponse);
     }
 };
