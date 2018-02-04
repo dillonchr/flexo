@@ -1,4 +1,5 @@
 const { gdq } = require('../funhouse');
+const Errors = require('../errors');
 
 module.exports = (respondWith) => {
     gdq((err, games) => {
@@ -10,6 +11,7 @@ module.exports = (respondWith) => {
                 .join('---\n');
             respondWith(textResponse);
         } else {
+            Errors.track(err);
             respondWith('Couldn\'t find any upcoming games in the schedule.');
         }
     });
