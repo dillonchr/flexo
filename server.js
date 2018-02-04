@@ -7,6 +7,7 @@ const inflation = require('./endpoints/inflation');
 const gdq = require('./endpoints/gdq');
 const fired = require('./endpoints/fired');
 const paycheck = require('./endpoints/paycheck');
+const budget = require('./endpoints/budget');
 
 http
     .createServer((req, res) => {
@@ -21,6 +22,8 @@ http
                     fired(text, text => sms.send(from, text));
                 } else if (/^paycheck/i.test(text)) {
                     paycheck(text, text => sms.send(from, text));
+                } else if (/^budget/i.test(text)) {
+                    budget(text, text => sms.send(from, text));
                 }
             }
         });

@@ -21,6 +21,14 @@ const makeApiCall = (url, onResponse) => {
 };
 
 module.exports = {
+    budget: {
+        balance(id, onResponse) {
+            makeApiCall(`/budget/${id}`, onResponse);
+        },
+        bought(id, price, description, onResponse) {
+            makeApiCall(`/budget/${id}/${price}/${encodeURIComponent(description)}`, onResponse);
+        }
+    },
     fired: {
         list(onResponse) {
             makeApiCall('/fired', onResponse);
