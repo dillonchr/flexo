@@ -11,8 +11,7 @@ http
             if (!err) {
                 const { from, text, applicationId } = data;
                 if (/^how much (was|is) /i.test(text)) {
-                    //inflation.sms(text, text => sms.send(from, text));
-                    inflation(text, (err, text) => console.log(err || text));
+                    inflation(text, text => sms.send(from, text));
                 } else if (/^gdq/i.test(text)) {
                     //gdq.sms(text => sms.send(from, text));
                 } else if (/^fired/i.test(text)) {
