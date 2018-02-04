@@ -23,7 +23,7 @@ http
                 } else if (/^paycheck/i.test(text)) {
                     paycheck(text, text => sms.send(from, text));
                 } else if (/^budget/i.test(text)) {
-                    budget(text, text => sms.send(from, text));
+                    budget(text, from, text => sms.send(from, text));
                 }
             }
         });
