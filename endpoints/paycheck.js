@@ -7,7 +7,7 @@ module.exports = (text, respondWith) => {
         if (err) {
             respondWith('Couldn\'t load response');
         } else {
-            respondWith(`Now you have ${balance.balance}`);
+            respondWith(`${amount ? 'Now you have ': ''}$${balance.balance}`);
         }
     };
     if (amount) {
