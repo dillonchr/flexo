@@ -11,7 +11,9 @@ module.exports = (respondWith) => {
                 .join('---\n');
             respondWith(textResponse);
         } else {
-            Errors.track(err);
+            if (err) {
+                Errors.track(err);
+            }
             respondWith('Couldn\'t find any upcoming games in the schedule.');
         }
     });
