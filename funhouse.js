@@ -1,10 +1,9 @@
 const request = require('request');
 const body = require('./body');
-const BASE_URL = 'http://localhost:7716';
 
 const makeApiCall = (url, onResponse) => {
     request({
-        url: BASE_URL + url,
+        url: process.env.FUNHOUSE_URL + url,
         headers: {
             'X-API-Token': process.env.FUNHOUSE_TOKEN
         }
