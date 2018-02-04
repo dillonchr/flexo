@@ -4,6 +4,8 @@ const http = require('http');
 const sms = require('./responder');
 const body = require('./body');
 const inflation = require('./endpoints/inflation');
+const gdq = require('./endpoints/gdq');
+const fired = require('./endpoints/fired');
 
 http
     .createServer((req, res) => {
@@ -13,9 +15,9 @@ http
                 if (/^how much (was|is) /i.test(text)) {
                     inflation(text, text => sms.send(from, text));
                 } else if (/^gdq/i.test(text)) {
-                    //gdq.sms(text => sms.send(from, text));
+                    gdq(text => sms.send(from, text));
                 } else if (/^fired/i.test(text)) {
-                    //fired.sms(text, text => sms.send(from, text));
+                    fired(text, text => sms.send(from, text));
                 }
             }
         });

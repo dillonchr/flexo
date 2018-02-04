@@ -22,6 +22,17 @@ const makeApiCall = (url, onResponse) => {
 };
 
 module.exports = {
+    fired: {
+        list(onResponse) {
+            makeApiCall('/fired', onResponse);
+        },
+        update(onResponse) {
+            makeApiCall('/fired/update', onResponse);
+        }
+    },
+    gdq(onResponse) {
+        makeApiCall('/gdq', onResponse);
+    },
     inflation(dollars, year, onResponse) {
         makeApiCall(`/inflation/${year}/${dollars}`, onResponse);
     }
