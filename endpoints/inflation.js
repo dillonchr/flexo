@@ -1,4 +1,5 @@
-const { inflation } = require('../funhouse');
+const { inflation } = require('funhouse-client');
+const Errors = require('../errors');
 
 module.exports = (cmd, respondWith) => {
     try {

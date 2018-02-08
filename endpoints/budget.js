@@ -1,4 +1,4 @@
-const { budget } = require('../funhouse');
+const { budget } = require('funhouse-client');
 const Errors = require('../errors');
 
 module.exports = (text, from, respondWith) => {
@@ -12,7 +12,7 @@ module.exports = (text, from, respondWith) => {
         }
     };
     if (amount && description) {
-        budget.bought(from, {price:amount,description}, balanceResponse);
+        budget.bought(from, {amount, description}, balanceResponse);
     } else {
         budget.balance(from, balanceResponse);
     }

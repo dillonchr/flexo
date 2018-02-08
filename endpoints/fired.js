@@ -1,4 +1,4 @@
-const { fired } = require('../funhouse');
+const { fired } = require('funhouse-client');
 const Errors = require('../errors');
 
 module.exports = (text, respondWith) => {

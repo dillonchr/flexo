@@ -1,4 +1,4 @@
-const { gdq } = require('../funhouse');
+const { gdq } = require('funhouse-client');
 const Errors = require('../errors');
 
 module.exports = (respondWith) => {
