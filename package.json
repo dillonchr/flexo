@@ -12,8 +12,8 @@
   "dependencies": {
     "dotenv": "^4.0.0",
     "funhouse-client": "^1.0.0",
-    "node-bandwidth": "^2.6.1",
+    "node-bandwidth": "^2.6.5",
     "raven": "^2.4.0",
-    "request": "^2.83.0"
+    "request": "^2.87.0"
   }
 }
