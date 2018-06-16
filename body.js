@@ -14,7 +14,7 @@ module.exports = (stream, onResponse) => {
                     onResponse({unauthorized: true});
                 }
             } catch (err) {
-                onResponse(err);
+                onResponse({unauthorized: true, err: err.toString()});
             }
         });
 };

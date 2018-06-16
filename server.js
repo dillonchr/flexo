@@ -31,6 +31,7 @@ http
                     res.writeHead(401);
                 }
             } else {
+                console.error(err);
                 res.writeHead(500);
             }
             res.end();
