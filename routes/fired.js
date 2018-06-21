@@ -1,7 +1,7 @@
-const { fired } = require('funhouse-client');
+const {fired} = require('@dillonchr/funhouse');
 const Errors = require('../errors');
 
-module.exports = (text, respondWith) => {
+module.exports = (text, _, respondWith) => {
     const call = /update/i.test(text) ? fired.update : fired.list;
     call((err, results) => {
         if (err) {
@@ -12,3 +12,5 @@ module.exports = (text, respondWith) => {
         }
     });
 };
+
+module.exports.match = (text) => /^fired/i.test(text);

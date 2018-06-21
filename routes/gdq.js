@@ -1,11 +1,13 @@
-const { gdq } = require('funhouse-client');
+const {gdq} = require('@dillonchr/funhouse');
 const Errors = require('../errors');
 
-module.exports = (respondWith) => {
+module.exports = (_, _, respondWith) => {
     gdq((err, games) => {
         if (games && games.length) {
-            const textResponse = games.slice(0, 5)
-                .map(({ runners, title, start, ends, estimate }) => {
+            const textResponse = games
+                .filter(g => !g.done)
+                .slice(0, 5)
+                .map(({runners, title, start, ends, estimate}) => {
                     return `${title}\n${start} - ${ends}\n${runners}\n`;
                 })
                 .join('---\n');
@@ -18,3 +20,5 @@ module.exports = (respondWith) => {
         }
     });
 };
+
+module.exports.match = (text) => /^gdq/i.test(text);

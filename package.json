@@ -10,10 +10,9 @@
   "author": "@dillonchr",
   "license": "GPL-2.0",
   "dependencies": {
+    "@dillonchr/funhouse": "^1.0.1",
     "dotenv": "^4.0.0",
-    "funhouse-client": "^1.0.0",
     "node-bandwidth": "^2.6.5",
-    "raven": "^2.4.0",
-    "request": "^2.87.0"
+    "raven": "^2.4.0"
   }
 }

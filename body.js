@@ -7,14 +7,9 @@ module.exports = (stream, onResponse) => {
         .on('end', () => {
             try {
                 const data = JSON.parse(Buffer.concat(body).toString());
-                const { applicationId } = data;
-                if (applicationId === process.env.BANDWIDTH_APP_ID) {
-                    onResponse(null, data);
-                } else {
-                    onResponse({unauthorized: true});
-                }
+                onResponse(null, data);
             } catch (err) {
-                onResponse({unauthorized: true, err: err.toString()});
+                onResponse(err);
             }
         });
 };
