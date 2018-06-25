@@ -1,5 +1,10 @@
 const {gdq} = require('@dillonchr/funhouse');
+const moment = require('moment');
 const Errors = require('../errors');
+
+const formatTimestamp = (ts) => {
+    return moment(ts).utcOffset('-05:00').format('h:mm A');
+};
 
 module.exports = (_, _, respondWith) => {
     gdq((err, games) => {
@@ -8,7 +13,7 @@ module.exports = (_, _, respondWith) => {
                 .filter(g => !g.done)
                 .slice(0, 5)
                 .map(({runners, title, start, ends, estimate}) => {
-                    return `${title}\n${start} - ${ends}\n${runners}\n`;
+                    return `${title}\n${formatTimestamp(start)} - ${formatTimestamp(ends)}\n${runners}\n`;
                 })
                 .join('---\n');
             respondWith(textResponse);

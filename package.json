@@ -12,6 +12,7 @@
   "dependencies": {
     "@dillonchr/funhouse": "^1.0.1",
     "dotenv": "^4.0.0",
+    "moment": "^2.22.2",
     "node-bandwidth": "^2.6.5",
     "raven": "^2.4.0"
   }
