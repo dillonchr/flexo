@@ -1,5 +1,9 @@
 version: '2.0'
 
+networks:
+  funhouse:
+    driver: bridge
+
 services:
   flexo:
     build: .
@@ -8,3 +12,5 @@ services:
     ports:
       - '7715:3000'
     restart: on-failure
+    networks:
+      - funhouse
