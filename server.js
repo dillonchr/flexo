@@ -20,7 +20,7 @@ http
 
                     if (matchedRoute) {
                         res.writeHead(200);
-                        matchedRoute(text, from, responseText => sms.send(from, text));
+                        matchedRoute(text, from, responseText => sms.send(from, responseText));
                     } else {
                         res.writeHead(404);
                     }
@@ -32,3 +32,4 @@ http
         });
     })
     .listen(process.env.port || 3000);
+

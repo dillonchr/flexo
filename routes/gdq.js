@@ -6,7 +6,7 @@ const formatTimestamp = (ts) => {
     return moment(ts).utcOffset('-05:00').format('h:mm A');
 };
 
-module.exports = (_, _, respondWith) => {
+module.exports = (_, __, respondWith) => {
     gdq((err, games) => {
         if (games && games.length) {
             const textResponse = games
