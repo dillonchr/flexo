@@ -1,0 +1,9 @@
+version: '2.0'
+
+services:
+  flexo:
+    build: .
+    command: npm start
+    ports:
+      - '7715:3000'
+    restart: on-failure
