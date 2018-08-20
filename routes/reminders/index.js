@@ -10,7 +10,7 @@ module.exports = (text, from, respondWith) => {
     setTimeout(() => {
         respondWith(text);
     }, delay);
-    respondWith(`Will remind you on ${date.toString()}`);
+    respondWith(`Will remind you in ${delay}ms or on ${date.toString()}`);
 };
 
 module.exports.match = (text) => /^remind/i.test(text);
