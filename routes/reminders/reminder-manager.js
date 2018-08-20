@@ -122,7 +122,6 @@ const extractDate = ( input ) => {
     if (day.length) {
         return toAbsoluteDate(day);
     }
-    return day;
 };
 
 module.exports = {
