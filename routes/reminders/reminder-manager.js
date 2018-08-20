@@ -22,7 +22,7 @@ const toAbsoluteDate = ( dayPieces ) => {
     today.setMinutes(0);
     today.setSeconds(0);
     today.setMilliseconds(0);
-    const dayCount = dayShardToId(dayPieces[0]);   
+    const dayCount = dayShardToId(dayPieces[0]);
     const dayShift = dayCount * (1000*60*60*24);
     const timeShift = timeStringToMilliseconds(dayPieces[1]);
     const day = new Date(today.getTime() + dayShift + timeShift);
@@ -120,7 +120,7 @@ const extractDate = ( input ) => {
 
     const day = extractRelativeDate(input);
     if (day.length) {
-        return toAbsoluteDate(day); 
+        return toAbsoluteDate(day);
     }
     return day;
 };
