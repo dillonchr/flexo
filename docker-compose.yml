@@ -12,5 +12,7 @@ services:
     ports:
       - '7715:3000'
     restart: on-failure
+    volumes:
+      - /mnt/wisconsin/flexo:/data
     networks:
       - funhouse_funhouse
