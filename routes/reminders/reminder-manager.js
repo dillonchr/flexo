@@ -3,7 +3,6 @@ const extract = (regex, input) => {
     if (result && result.length) {
         return result.length > 1 ? result.slice(1) : result;
     }
-    return [];
 };
 
 const toDate = (time, day, month, year) => new Date(`${month} ${day}, ${year} ${time}`);
@@ -13,7 +12,85 @@ const extractLongDate = ( input ) => {
 };
 
 const extractRelativeDate = ( input ) => {
-    return extract(/(mon|monday|tues?|tuesday|wed|wednesday|thurs?|thursday|fri|friday|sat|saturday|sun|sunday)\s?@?\s?(\d+:?\d{0,2})/i, input);
+    const hasDays = extract(/(mon|monday|tues?|tuesday|wed|wednesday|thurs?|thursday|fri|friday|sat|saturday|sun|sunday)/i, input);
+    if (hasDays) {
+        const hasTime = extract(/\s?@?\s?(\d+:?\d{0,2})$/, input);
+        if (hasTime) {
+            hasDays.push(hasTime[0]);
+        }
+        return toAbsoluteDate(hasDays);
+    }
+    const hasDelay = extract(/in (\d+) (min|minutes?|sec|seconds?|hrs?|hours?|days?|mos?|months?|ye?a?rs?)/i, input);
+    if (hasDelay) {
+        return toTimeout(hasDelay);
+    }
+};
+
+const extractAbsoluteDate = ( input ) => {
+    const date = extractLongDate(input);
+    if (date.length) {
+        //const hasAll = !!date[3];
+        const hasYear = !!date[2];
+        const hasDay = !!date[1];
+
+        let month = date[0];
+        let day = date[1] || 1;
+        let year = date[2] || new Date().getFullYear();
+        let time;
+        if (!date[3] || (date[3].length === 5 && date[3].split(':').shift() > 24)) {
+            time = '08:00';
+        } else {
+            time = extract(/\d+:\d+/, date[3]).shift();
+            if (time.length < 5) {
+                const isPm = /pm/i.test(date[3]) || (!/am/i.test(date[3]) && time.split(':').shift() < 8);
+                time += isPm ? ' PM' : ' AM';
+            }
+        }
+        let reminderDate = toDate(time, day, month, year);
+        const now = new Date();
+
+        if (now > reminderDate) {
+            if (!hasYear) {
+                reminderDate = toDate(time, day, month, ++year);
+                if (reminderDate > now) {
+                    return reminderDate;
+                }
+            }
+            if (!hasDay) {
+                reminderDate = toDate(time, ++day, month, year);
+                if (reminderDate > now) {
+                    return reminderDate;
+                }
+            }
+        }
+        return reminderDate;
+    }
+};
+
+const toTimeout = ([count, unit]) => {
+    const now = new Date().getTime();
+    return new Date((+count * unitToMillis(unit)) + now);
+};
+
+const unitToMillis = (unit) => {
+    if (/^sec/i.test(unit)) {
+        return 1000;
+    }
+    if (/^min/i.test(unit)) {
+        return 60000;
+    }
+    if (/^ho?u?r/i.test(unit)) {
+        return 3600000;
+    }
+    if (/^day/i.test(unit)) {
+        return 86400000;
+    }
+    if (/^mon?t?h?/i.test(unit)) {
+        return 2592000000;
+    }
+    if (/^ye?a?r/i.test(unit)) {
+        return 31536000000;
+    }
 };
 
 const toAbsoluteDate = ( dayPieces ) => {
@@ -79,54 +156,13 @@ const dayShardToId = ( day ) => {
 };
 
 const extractDate = ( input ) => {
-    const date = extractLongDate(input);
-    if (date.length) {
-        //const hasAll = !!date[3];
-        const hasYear = !!date[2];
-        const hasDay = !!date[1];
-
-        let month = date[0];
-        let day = date[1] || 1;
-        let year = date[2] || new Date().getFullYear();
-        let time;
-        if (!date[3] || (date[3].length === 5 && date[3].split(':').shift() > 24)) {
-            time = '08:00';
-        } else {
-            time = extract(/\d+:\d+/, date[3]).shift();
-            if (time.length < 5) {
-                const isPm = /pm/i.test(date[3]) || (!/am/i.test(date[3]) && time.split(':').shift() < 8);
-                time += isPm ? ' PM' : ' AM';
-            }
-        }
-        let reminderDate = toDate(time, day, month, year);
-        const now = new Date();
-
-        if (now > reminderDate) {
-            if (!hasYear) {
-                reminderDate = toDate(time, day, month, ++year);
-                if (reminderDate > now) {
-                    return reminderDate;
-                }
-            }
-            if (!hasDay) {
-                reminderDate = toDate(time, ++day, month, year);
-                if (reminderDate > now) {
-                    return reminderDate;
-                }
-            }
-        }
-        return reminderDate;
-    }
-
-    const day = extractRelativeDate(input);
-    if (day.length) {
-        return toAbsoluteDate(day);
-    }
+    return extractAbsoluteDate(input) || extractRelativeDate(input);
 };
 
 module.exports = {
     dayShardToId,
     extract,
+    extractAbsoluteDate,
     extractDate,
     extractLongDate,
     extractRelativeDate,
