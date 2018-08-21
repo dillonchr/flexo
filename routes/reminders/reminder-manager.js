@@ -20,29 +20,28 @@ const extractRelativeDate = ( input ) => {
         }
         return toAbsoluteDate(hasDays);
     }
-    const hasDelay = extract(/in (\d+) (min|minutes?|sec|seconds?|hrs?|hours?|days?|mos?|months?|ye?a?rs?)/i, input);
-    if (hasDelay) {
-        return toTimeout(hasDelay);
-    }
 };
 
-const extractAbsoluteDate = ( input ) => {
-    const date = extractLongDate(input);
-    if (date.length) {
-        //const hasAll = !!date[3];
-        const hasYear = !!date[2];
-        const hasDay = !!date[1];
+const extractDelay = ( input ) => {
+    return extract(/in (\d+) (min|minutes?|sec|seconds?|hrs?|hours?|days?|mos?|months?|ye?a?rs?)/i, input);
+};
 
-        let month = date[0];
-        let day = date[1] || 1;
-        let year = date[2] || new Date().getFullYear();
+const toRealDate = ( pieces ) => {
+    if (pieces && pieces.length) {
+        //const hasAll = !!pieces[3];
+        const hasYear = !!pieces[2];
+        const hasDay = !!pieces[1];
+
+        let month = pieces[0];
+        let day = pieces[1] || 1;
+        let year = pieces[2] || new Date().getFullYear();
         let time;
-        if (!date[3] || (date[3].length === 5 && date[3].split(':').shift() > 24)) {
+        if (!pieces[3] || (pieces[3].length === 5 && pieces[3].split(':').shift() > 24)) {
             time = '08:00';
         } else {
-            time = extract(/\d+:\d+/, date[3]).shift();
+            time = extract(/\d{1,2}:?\d{0,2}/, pieces[3]).shift();
             if (time.length < 5) {
-                const isPm = /pm/i.test(date[3]) || (!/am/i.test(date[3]) && time.split(':').shift() < 8);
+                const isPm = /pm/i.test(pieces[3]) || (!/am/i.test(pieces[3]) && time.split(':').shift() < 8);
                 time += isPm ? ' PM' : ' AM';
             }
         }
@@ -65,6 +64,7 @@ const extractAbsoluteDate = ( input ) => {
         }
         return reminderDate;
     }
+
 };
 
 const toTimeout = ([count, unit]) => {
@@ -100,7 +100,8 @@ const toAbsoluteDate = ( dayPieces ) => {
     today.setSeconds(0);
     today.setMilliseconds(0);
     const dayCount = dayShardToId(dayPieces[0]);
-    const dayShift = dayCount * (1000*60*60*24);
+    const thisDay = today.getDay();
+    const dayShift = (dayCount <= thisDay ? 7 - thisDay - dayCount : dayCount - thisDay) * unitToMillis('day');
     const timeShift = timeStringToMilliseconds(dayPieces[1]);
     const day = new Date(today.getTime() + dayShift + timeShift);
     return day;
@@ -129,6 +130,9 @@ const timeStringToMilliseconds = ( time ) => {
 
 const dayShardToId = ( day ) => {
     switch(day.toLowerCase()) {
+    case 'sun':
+    case 'sunday':
+        return 0;
     case 'mon':
     case 'monday':
         return 1;
@@ -149,20 +153,27 @@ const dayShardToId = ( day ) => {
     case 'sat':
     case 'saturday':
         return 6;
-    case 'sun':
-    case 'sunday':
-        return 7;
     }
 };
 
 const extractDate = ( input ) => {
-    return extractAbsoluteDate(input) || extractRelativeDate(input);
+    let absoluteDate = extractLongDate(input);
+    if (absoluteDate) {
+        return toRealDate(absoluteDate);
+    }
+    let relativeDate = extractRelativeDate(input);
+    if (relativeDate) {
+        return toAbsoluteDate(relativeDate);
+    }
+    let delay = extractDelay(input);
+    if (delay) {
+        return toTimeout(delay);
+    }
 };
 
 module.exports = {
     dayShardToId,
     extract,
-    extractAbsoluteDate,
     extractDate,
     extractLongDate,
     extractRelativeDate,

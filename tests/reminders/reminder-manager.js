@@ -61,13 +61,19 @@ test('should default to 8 on relative dates', t => {
 test('should handle relative units of time', t => {
     t.plan(1);
     const now = new Date();
-    const result = r.extractRelativeDate('remind haircut in 2 hours');
+    const result = r.extractDate('remind haircut in 2 hours');
     t.equals(result.getTime() - now.getTime() > 1000 * 60 * 59, true);
 });
 
 test('should handle relative units of days', t => {
     t.plan(1);
-    const result = r.extractRelativeDate('remind haircut in 2 days');
+    const result = r.extractDate('remind haircut in 2 days');
+    t.equals(result.getTime() - now.getTime() > 1000 * 60 * 60 * 47, true);
+});
+
+test('should handle relative units of days in raw extract', t => {
+    t.plan(1);
+    const result = r.extractDate('remind haircut in 2 days');
     t.equals(result.getTime() - now.getTime() > 1000 * 60 * 60 * 47, true);
 });
 
