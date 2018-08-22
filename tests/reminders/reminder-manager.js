@@ -45,15 +45,21 @@ test('should handle times that already passed with times', t => {
 });
 
 test('reminder manager date parse days of the week', t => {
-    t.plan(2);
+    t.plan(1);
     const date = r.extractRelativeDate('crash bandicoot Sunday @ 6');
-    t.equals(date.getMonth() >= new Date().getMonth(), true);
-    t.equals(date.getHours(), 18);
+    t.deepLooseEqual(date, ['Sun', '6']);
 });
 
 test('should default to 8 on relative dates', t => {
     t.plan(2);
-    const date = r.extractRelativeDate('crash bandicoot Sunday');
+    const date = r.extractDate('crash bandicoot Sunday');
+    t.equals(date.getMonth() >= new Date().getMonth(), true);
+    t.equals(date.getHours(), 8);
+});
+
+test('should handle relative dates automagically', t => {
+    t.plan(2);
+    const date = r.extractDate('crash bandicoot Sunday 8');
     t.equals(date.getMonth() >= new Date().getMonth(), true);
     t.equals(date.getHours(), 8);
 });
