@@ -18,7 +18,7 @@ const extractRelativeDate = ( input ) => {
         if (hasTime) {
             hasDays.push(hasTime[0]);
         }
-        return toAbsoluteDate(hasDays);
+        return hasDays;
     }
 };
 
