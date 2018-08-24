@@ -1,6 +1,7 @@
 const sms = require('../../responder');
 const { extractDate } = require('./reminder-manager.js');
 const { addReminder, getPersistedReminders } = require('./db.js');
+const moment = require('moment');
 
 const superSetTimeout = (fn, date) => {
     const diff = date.getTime() - (new Date().getTime());
@@ -24,7 +25,7 @@ module.exports = (text, from, respondWith) => {
         superSetTimeout(() => {
             respondWith(text);
         }, date);
-        respondWith(`Will remind you on ${date.toString()}`);
+        respondWith(`Will remind you ${moment(date).fromNow()}`);
     });
 };
 
