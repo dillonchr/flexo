@@ -23,7 +23,7 @@ module.exports = (text, from, respondWith) => {
             return respondWith('Failed to save reminder! Sorry man.');
         }
         superSetTimeout(() => {
-            respondWith(text);
+            respondWith(date.message);
         }, date);
         respondWith(`Will remind you ${moment(date).fromNow()}`);
     });
