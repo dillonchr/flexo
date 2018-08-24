@@ -12,12 +12,12 @@ const superSetTimeout = (fn, date) => {
 };
 
 module.exports = (text, from, respondWith) => {
-    const date = extractDate(text);
+    const date = extractDate(text.substr(7));
     if (!date) {
         return respondWith('Couldn\'t find the date in the reminder.');
     }
 
-    addReminder(from, text, date, (err) => {
+    addReminder(from, date.message, date, (err) => {
         if (err) {
             return respondWith('Failed to save reminder! Sorry man.');
         }

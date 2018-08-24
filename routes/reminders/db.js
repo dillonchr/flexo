@@ -21,6 +21,7 @@ const saveReminders = (fn, data) => {
 };
 
 const addReminder = (from, message, date, fn) => {
+
     getPersistedReminders((err, reminders) => {
         if (err) {
             return fn(err);

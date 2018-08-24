@@ -5,14 +5,18 @@ const extract = (regex, input) => {
     }
 };
 
-const toDate = (time, day, month, year) => new Date(`${month} ${day}, ${year} ${time}`);
+const toDate = (message, time, day, month, year) => {
+    const d = new Date(`${month} ${day}, ${year} ${time}`);
+    d.message = message;
+    return d;
+};
 
 const extractLongDate = ( input ) => {
-    return extract(/(Jan|January|Feb|February|Mar|March|Apr|April|May|Jun|June|Jul|July|Aug|August|Sept?|September|Oct|October|Nov|November|Dec|December) ?(\d+)?\s?(\d{4})?\s?a?t?\s?(\d{1,2}:?\d{2}?\s?[AMPamp]*)?/i, input);
+    return extract(/^(.*) (Jan|January|Feb|February|Mar|March|Apr|April|May|Jun|June|Jul|July|Aug|August|Sept?|September|Oct|October|Nov|November|Dec|December) ?(\d+)?\s?(\d{4})?\s?a?t?\s?(\d{1,2}:?\d{2}?\s?[AMPamp]*)?/i, input);
 };
 
 const extractRelativeDate = ( input ) => {
-    const hasDays = extract(/(mon|monday|tues?|tuesday|wed|wednesday|thurs?|thursday|fri|friday|sat|saturday|sun|sunday)/i, input);
+    const hasDays = extract(/^(.*) (mon|monday|tues?|tuesday|wed|wednesday|thurs?|thursday|fri|friday|sat|saturday|sun|sunday)/i, input);
     if (hasDays) {
         const hasTime = extract(/\s?@?\s?(\d+:?\d{0,2})$/, input);
         if (hasTime) {
@@ -23,11 +27,12 @@ const extractRelativeDate = ( input ) => {
 };
 
 const extractDelay = ( input ) => {
-    return extract(/in (\d+) (min|minutes?|sec|seconds?|hrs?|hours?|days?|mos?|months?|ye?a?rs?)/i, input);
+    return extract(/^(.*) in (\d+) (min|minutes?|sec|seconds?|hrs?|hours?|days?|mos?|months?|ye?a?rs?)/i, input);
 };
 
 const toRealDate = ( pieces ) => {
     if (pieces && pieces.length) {
+        const message = pieces.shift();
         //const hasAll = !!pieces[3];
         const hasYear = !!pieces[2];
         const hasDay = !!pieces[1];
@@ -45,18 +50,18 @@ const toRealDate = ( pieces ) => {
                 time += isPm ? ' PM' : ' AM';
             }
         }
-        let reminderDate = toDate(time, day, month, year);
+        let reminderDate = toDate(message, time, day, month, year);
         const now = new Date();
 
         if (now > reminderDate) {
             if (!hasYear) {
-                reminderDate = toDate(time, day, month, ++year);
+                reminderDate = toDate(message, time, day, month, ++year);
                 if (reminderDate > now) {
                     return reminderDate;
                 }
             }
             if (!hasDay) {
-                reminderDate = toDate(time, ++day, month, year);
+                reminderDate = toDate(message, time, ++day, month, year);
                 if (reminderDate > now) {
                     return reminderDate;
                 }
@@ -67,9 +72,11 @@ const toRealDate = ( pieces ) => {
 
 };
 
-const toTimeout = ([count, unit]) => {
+const toTimeout = ([message, count, unit]) => {
     const now = new Date().getTime();
-    return new Date((+count * unitToMillis(unit)) + now);
+    const date = new Date((+count * unitToMillis(unit)) + now);
+    date.message = message;
+    return date;
 };
 
 const unitToMillis = (unit) => {
@@ -94,6 +101,7 @@ const unitToMillis = (unit) => {
 };
 
 const toAbsoluteDate = ( dayPieces ) => {
+    const message = dayPieces.shift();
     const today = new Date();
     today.setHours(0);
     today.setMinutes(0);
@@ -104,6 +112,7 @@ const toAbsoluteDate = ( dayPieces ) => {
     const dayShift = (dayCount <= thisDay ? 7 - thisDay - dayCount : dayCount - thisDay) * unitToMillis('day');
     const timeShift = timeStringToMilliseconds(dayPieces[1]);
     const day = new Date(today.getTime() + dayShift + timeShift);
+    day.message = message;
     return day;
 };
 
