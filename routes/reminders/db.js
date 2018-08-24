@@ -9,11 +9,20 @@ const getPersistedReminders = (fn) => {
             if (!reminders || !Object.keys(reminders).length) {
                 throw new Error('empty');
             }
-            fn(null, reminders);
+            fn(null, getForthcomingReminders(reminders));
         } catch (ignore) {
             fn(null, {});
         }
     });
+};
+
+const getForthcomingReminders = (reminders) => {
+    const now = new Date().getTime();
+    return Object.entries(reminders)
+        .reduce((r, [from, coll]) => {
+            r[from] = coll.filter(({date}) => new Date(date).getTime() > now);
+            return r;
+        }, {});
 };
 
 const saveReminders = (fn, data) => {
@@ -21,7 +30,6 @@ const saveReminders = (fn, data) => {
 };
 
 const addReminder = (from, message, date, fn) => {
-
     getPersistedReminders((err, reminders) => {
         if (err) {
             return fn(err);
@@ -38,6 +46,7 @@ const addReminder = (from, message, date, fn) => {
 
 module.exports = {
     addReminder,
+    getForthcomingReminders,
     getPersistedReminders,
     saveReminders
 };
