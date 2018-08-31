@@ -1,0 +1,16 @@
+version: '2.0'
+
+networks:
+  funhouse_funhouse:
+    external: true 
+
+services:
+  flexo:
+    build: .
+    command: npm start
+    env_file: .env
+    ports:
+      - '7715:3000'
+    restart: on-failure
+    networks:
+      - funhouse_funhouse
