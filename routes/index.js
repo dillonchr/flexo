@@ -3,5 +3,6 @@ module.exports = [
     require('./fired.js'),
     require('./gdq.js'),
     require('./inflation.js'),
-    require('./paycheck.js')
+    require('./paycheck.js'),
+    require('./reminders')
 ];
